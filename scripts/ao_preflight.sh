@@ -52,7 +52,7 @@ if command -v gh >/dev/null 2>&1; then
   gh auth status >/dev/null 2>&1 && pass "GitHub CLI is authenticated" || fail "GitHub CLI is not authenticated. Run: gh auth login"
 fi
 if command -v claude >/dev/null 2>&1; then
-  claude auth status --text >/dev/null 2>&1 && pass "Claude Code is authenticated" || fail "Claude Code is not authenticated"
+  claude auth status >/dev/null 2>&1 && pass "Claude Code is authenticated" || fail "Claude Code is not authenticated"
 fi
 if command -v codex >/dev/null 2>&1; then
   codex login status >/dev/null 2>&1 && pass "Codex is authenticated with ChatGPT" || fail "Codex is not authenticated. Run codex and choose Sign in with ChatGPT"
