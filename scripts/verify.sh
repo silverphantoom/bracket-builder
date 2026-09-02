@@ -3,6 +3,10 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+echo "=== Next.js route type generation ==="
+npx next typegen
+
+echo ""
 echo "=== TypeScript check ==="
 npx tsc --noEmit
 
