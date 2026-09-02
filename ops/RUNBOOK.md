@@ -68,6 +68,21 @@ Use a development Supabase environment only.
 6. Continue until the final winner appears.
 7. Check the narrow and wide layouts.
 
+## Vercel preview review
+
+Pushing an Agent Orchestrator task branch or opening its draft pull request may
+trigger the repository's existing Vercel integration. This creates a
+non-production preview.
+
+Use the preview to inspect visible changes on desktop and phone-sized layouts.
+The worker should include the preview URL in its completion report when one is
+available. A ready preview is evidence that Vercel built the branch, but it does
+not replace local tests, GitHub checks, product-flow verification, or review.
+
+Agents may not run a Vercel deployment command, change Vercel environment
+variables, modify domains or project settings, promote a preview, or deploy to
+production.
+
 ## Production boundaries
 
 Do not:
@@ -75,8 +90,8 @@ Do not:
 - Apply or alter a live Supabase migration.
 - Reset or delete production data.
 - Expose a service-role key.
-- Deploy to Vercel or another host.
-- Change a production environment variable.
+- Promote a Vercel preview or deploy to production.
+- Change a production environment variable, domain, or project setting.
 
 Each requires Peyton's explicit approval and a rollback plan.
 

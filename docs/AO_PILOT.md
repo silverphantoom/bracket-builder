@@ -4,7 +4,8 @@
 
 Bracket Builder is smaller, visual, and easier for Peyton to inspect than the
 JARVIS runtime. It is the right place to prove Agent Orchestrator task ownership,
-worktree isolation, Claude-to-Codex review, and pull-request visibility.
+worktree isolation, Claude-to-Codex review, pull-request visibility, automated
+checks, and non-production preview review.
 
 ## Before registration
 
@@ -45,12 +46,14 @@ replacement command without first checking the existing project configuration.
 
 ```text
 Read AGENTS.md, docs/AO_RULES.md, and every file under ops. Inspect the current
-Agent Orchestrator sessions, branches, pull requests, checks, and reviews.
+Agent Orchestrator sessions, branches, pull requests, checks, reviews, and any
+existing Vercel preview state.
 
 Explain the current objective in plain English. Then prepare BB-001 exactly as
 defined in ops/NOW.md. Show the complete task brief and confirm that it changes
 documentation only. Do not launch a worker until I approve. Do not edit files,
-commit, push, merge, deploy, use an API key, or change Supabase.
+commit, push, merge, promote a preview, deploy to production, use an API key, or
+change Supabase.
 ```
 
 ## BB-001 approval message
@@ -60,7 +63,9 @@ After the orchestrator shows the bounded brief, Peyton can say:
 ```text
 Approve BB-001 for one Claude Code implementation worker. Use an isolated AO
 worktree and task branch. Run the required verification, open a draft pull
-request, and request the configured Codex review. Do not merge or deploy.
+request, allow the existing Vercel integration to create a non-production
+preview, and request the configured Codex review. Do not merge, promote the
+preview, change production, or deploy to production.
 ```
 
 ## Review checkpoint
@@ -71,8 +76,10 @@ Before approving merge, Peyton should receive:
 - Exact verification results
 - The Codex verdict and any blockers
 - A list of changed files
+- The non-production preview URL when one exists
 - Anything he should visually inspect
 - Rollback instructions
 
 The first task succeeds when Peyton can understand the card, worker, branch,
-pull request, checks, and reviewer state without reopening unrelated chats.
+pull request, checks, preview, and reviewer state without reopening unrelated
+chats.

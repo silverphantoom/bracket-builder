@@ -35,10 +35,20 @@ implementation worker owns a task. This prevents colliding changes.
 Use Peyton's authenticated Claude Code and ChatGPT/Codex subscriptions. Do not
 add API keys, usage credits, or pay-as-you-go fallback.
 
-## D-006: Manual merge and deployment approval
+## D-006: Manual merge and production approval
 
 **Status:** Active
 
 Workers may commit, push a task branch, and open a draft pull request. Peyton
-must explicitly approve merge, deployment, production configuration, and
-production data changes.
+must explicitly approve merge, production deployment, production configuration,
+and production data changes.
+
+## D-007: Automatic branch previews are allowed
+
+**Status:** Active
+
+The repository's existing Vercel Git integration may automatically build a
+non-production preview when a task branch is pushed or a draft pull request is
+opened. The preview is an approved verification surface. Agents may not invoke
+Vercel directly, alter deployment settings or environment variables, promote a
+preview, or deploy to production without Peyton's explicit approval.
