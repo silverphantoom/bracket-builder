@@ -1,0 +1,24 @@
+{
+  "defaultBranch": "main",
+  "sessionPrefix": "bracket",
+  "worker": {
+    "agent": "claude-code",
+    "agentConfig": {
+      "permissions": "accept-edits"
+    }
+  },
+  "orchestrator": {
+    "agent": "claude-code",
+    "agentConfig": {
+      "permissions": "default"
+    }
+  },
+  "agentRulesFile": "docs/AO_RULES.md",
+  "orchestratorRules": "Read AGENTS.md, docs/AO_RULES.md, and all files under ops before supervising. Manage and delegate only. Do not implement directly. During the pilot, do not launch a worker until Peyton approves the task.",
+  "reviewers": [
+    {
+      "harness": "codex"
+    }
+  ],
+  "autoReview": true
+}

@@ -1,20 +1,27 @@
 @AGENTS.md
 
-# CLAUDE.md — Bracket Builder
+# CLAUDE.md: Bracket Builder
 
-Viral bracket voting app. Create a bracket with 3-32 entries, share a link, watch live votes.
+Bracket Builder is a frictionless bracket voting app. A creator enters 3 to 32
+options, shares a link, and participants vote while results and later rounds
+advance.
 
 ## Stack
-- Next.js 16, React 19, Tailwind, TypeScript
-- Supabase (persistence, realtime voting)
-- @dnd-kit (drag-and-drop bracket creation)
-- Run: `npm run dev` (port 3000)
 
-## Key Files
-- `src/app/page.tsx` — main page
-- `src/components/BracketCreator` — bracket creation UI
+- Next.js 16, React 19, Tailwind CSS, TypeScript
+- Supabase for persistence and voting data
+- `@dnd-kit` for drag-and-drop bracket creation
+- Development command: `npm run dev`
+- Verification command: `bash scripts/verify.sh`
 
-## Rules
-- No login required — frictionless sharing is the product
-- Must work on mobile (voting happens on phones)
-- Keep bracket creation simple — don't over-complicate the UX
+## Canonical project context
+
+Read `ops/PROJECT.md`, `ops/NOW.md`, `ops/DECISIONS.md`, and `ops/RUNBOOK.md`.
+Agent Orchestrator role and review rules live in `docs/AO_RULES.md`.
+
+## Product constraints
+
+- No login required. Frictionless sharing is central to the product.
+- Voting must work well on phones.
+- Keep bracket creation simple.
+- Do not touch production Supabase data or deploy without Peyton's approval.
