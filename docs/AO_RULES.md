@@ -254,9 +254,13 @@ such file or directory" while inspecting the legacy session
 
 Recovery: the orchestrator started the system tmux server with a detached
 placeholder session, retriggered, and all subsequent review launches succeeded.
-The placeholder later exited on its own, leaving a stale socket file. The
-orchestrator is empirically testing during BB-004's own review launch whether
-the workaround is still needed.
+The placeholder later exited on its own, leaving a stale socket file.
+
+Outcome, 2026-09-03: the orchestrator tested the workaround during BB-004's own
+review launch. That review launched successfully with no system tmux server
+running at all, so the placeholder is not currently necessary. The BB-001
+failure came from a stale legacy session record that has since cleared, and the
+placeholder has been removed.
 
 Durable rule: if a review launch fails with this legacy-socket error, the one
 safe self-recovery is to start the system tmux server with a detached
