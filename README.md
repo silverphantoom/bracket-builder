@@ -28,11 +28,19 @@ Details worth knowing:
   immediately.
 - The vote threshold is set at creation time (5 to 50, default 10). It is the
   number of votes that closes a single matchup, not the whole bracket.
-- Votes are anonymous. A voter is identified by an `httpOnly` cookie, and a
-  database uniqueness constraint stops the same voter from voting twice in the
-  same matchup. Vote submissions are also rate limited per IP.
-- The creator gets a separate creator cookie, which lets them edit the title
-  and description, force close a matchup, or reset the bracket.
+- Voting takes no account and asks for no name. A voter is identified by a
+  random id in an `httpOnly` cookie, and a database uniqueness constraint stops
+  the same voter from voting twice in the same matchup. Vote submissions are
+  also rate limited per IP. This is anonymous in the interface only. Each vote
+  row also stores that voter id and the voter's IP address, and today those
+  columns are readable by anyone. See
+  [Known security limitations](#known-security-limitations).
+- The creator gets a separate creator cookie holding a creator token. The API
+  compares that cookie against the bracket's stored `creator_token` to allow
+  editing the title and description, force closing a matchup, and resetting the
+  bracket. Today that token is also readable by anyone, so treat it as a
+  convenience for returning creators rather than as real access control. See
+  [Known security limitations](#known-security-limitations).
 
 ## Requirements
 
@@ -60,7 +68,7 @@ cp .env.local.example .env.local
 | Variable | What it is for |
 | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | The Supabase project URL. Sent to the browser. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | The Supabase anonymous key. Sent to the browser. Read only under row level security. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | The Supabase anonymous key. Inlined into the client bundle by the `NEXT_PUBLIC_` prefix, so treat it as public. It cannot write, but under the current policies it can read every row and column of all four tables. See [Known security limitations](#known-security-limitations). |
 | `SUPABASE_SERVICE_KEY` | The Supabase service role key. Server only. It bypasses row level security and is used by the API routes to write brackets, matchups, and votes. |
 
 Secret handling rules:
@@ -149,9 +157,39 @@ Four tables, defined in `supabase/migrations/001_initial.sql`:
   the link to the next round's matchup and slot
 - `votes`: one row per vote, unique on (matchup, voter)
 
-All four tables have row level security enabled with public read policies and
-no anonymous write policies. Every write goes through an API route using the
-service role key, which is why that key stays server side.
+All four tables have row level security enabled. The only policies are
+`FOR SELECT USING (true)` on each table, and there are no INSERT, UPDATE, or
+DELETE policies. So the current rules are: anyone holding the anonymous key can
+read everything, and nobody can write. Every write goes through an API route
+using the service role key, which is why that key stays server side.
+
+"Read everything" is literal. `USING (true)` grants no per-column protection,
+so it includes `brackets.creator_token`, `votes.voter_id`, and
+`votes.voter_ip`. Read the next section before you rely on either the voting
+anonymity or the creator-only actions.
+
+## Known security limitations
+
+These are properties of the current schema, not of this README. They are
+recorded here so nobody reads the sections above as stronger guarantees than
+the database actually provides.
+
+- **The creator token is publicly readable, so creator-only actions are not
+  enforced.** `brackets` is readable with the public anonymous key, and
+  `creator_token` is a column on it. The `PATCH /api/brackets/[bracketId]`
+  route authorizes only by comparing the request's creator cookie against that
+  stored token. Anyone who reads a bracket row can therefore replay its token
+  and edit, force close, or reset that bracket.
+- **Votes are not anonymous against the database.** `votes` is readable with
+  the same key, including `voter_id` and `voter_ip`. That is enough to link
+  every vote one person cast across a bracket, and to tie those votes to an IP
+  address. The interface never shows this, but the data is reachable.
+
+Fixing either one means changing the schema and its RLS policies, for example
+by restricting the readable projection, or by moving the creator credential out
+of a publicly readable table and verifying it server side. That is production
+schema work, so it is out of scope for a documentation task and needs Peyton's
+explicit approval before anyone starts it. Track it as its own task.
 
 ## Safety and approval boundaries
 
