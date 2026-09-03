@@ -52,3 +52,42 @@ non-production preview when a task branch is pushed or a draft pull request is
 opened. The preview is an approved verification surface. Agents may not invoke
 Vercel directly, alter deployment settings or environment variables, promote a
 preview, or deploy to production without Peyton's explicit approval.
+
+## D-008: Closed-loop work-package operating model
+
+**Status:** Active
+
+Peyton approves a bounded work package once. That approval authorizes the
+orchestrator to decompose the package into child tasks, rank and dependency-map
+them, launch workers inside the approved scope, start newly unblocked child
+tasks, run CI and verification, request reviews, return findings to the
+implementation owner, and repeat the repair and re-review loop until each child
+task reaches Ready or is genuinely blocked. Child tasks inside an approved
+package need no separate approval.
+
+This supersedes two earlier pilot rules:
+
+- Per-task approval before launching any worker. Standalone tasks outside an
+  approved package still need Peyton's approval.
+- The fixed limit of three active implementation workers and one reviewer.
+  Concurrency is now chosen dynamically inside hard pilot ceilings.
+
+Unchanged by this decision:
+
+- One implementation owner per task (D-004).
+- Subscription-only model use (D-005).
+- Manual merge and production approval (D-006). The completion gate can move a
+  task to Ready, never to merged. Ready is not merge authority: any merge action
+  needs a fresh explicit approval from Peyton naming the specific pull request
+  or bounded set of pull requests, and can never be inferred from work-package
+  approval, completion-gate success, a Codex `PASS`, green CI, or permission to
+  mark a pull request Ready. The invariant and its PR #2 pilot evidence live in
+  `docs/AO_RULES.md` under "READY != MERGE AUTHORITY".
+- Peyton's explicit approval is still required for merge to `main`, production
+  deployment, production Supabase or schema changes, credentials, billing or
+  purchases, destructive or irreversible changes, external or customer
+  communication, production data mutation, and widening an approved package.
+
+The full model, including the concurrency policy, completion gate, closed review
+loop, interruption policy, work package report, and review-launch health rule,
+lives in `docs/AO_RULES.md`.

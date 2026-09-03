@@ -7,6 +7,14 @@ JARVIS runtime. It is the right place to prove Agent Orchestrator task ownership
 worktree isolation, Claude-to-Codex review, pull-request visibility, automated
 checks, and non-production preview review.
 
+## Current operating model
+
+Since BB-004 the pilot runs the closed-loop work-package model in
+`docs/AO_RULES.md`, recorded as D-008 in `ops/DECISIONS.md`. Peyton approves a
+bounded work package once and the orchestrator runs it to Ready. The setup steps
+and BB-001 examples below are kept as the historical record of how the pilot
+started; where they show per-task approval, read `docs/AO_RULES.md` instead.
+
 ## Before registration
 
 1. Install the stable Agent Orchestrator desktop application on the Mac.
@@ -42,7 +50,11 @@ The JSON in `config/ao-project-config.example.json` is a reference. Agent
 Orchestrator stores project configuration locally. Do not use a full config
 replacement command without first checking the existing project configuration.
 
-## First orchestrator prompt
+## First orchestrator prompt (historical, BB-001)
+
+This prompt and the approval message below are the original per-task launch
+sequence. They are preserved as pilot history. Work is now authorized per work
+package under `docs/AO_RULES.md`.
 
 ```text
 Read AGENTS.md, docs/AO_RULES.md, and every file under ops. Inspect the current
@@ -56,7 +68,7 @@ commit, push, merge, promote a preview, deploy to production, use an API key, or
 change Supabase.
 ```
 
-## BB-001 approval message
+## BB-001 approval message (historical)
 
 After the orchestrator shows the bounded brief, Peyton can say:
 

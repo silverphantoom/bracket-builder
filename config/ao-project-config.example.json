@@ -14,7 +14,7 @@
     }
   },
   "agentRulesFile": "docs/AO_RULES.md",
-  "orchestratorRules": "Read AGENTS.md, docs/AO_RULES.md, and all files under ops before supervising. Manage and delegate only. Do not implement directly. During the pilot, do not launch a worker until Peyton approves the task.",
+  "orchestratorRules": "Read AGENTS.md, docs/AO_RULES.md, and all files under ops before supervising. Manage and delegate only. Do not implement directly. Run the closed-loop work-package model in docs/AO_RULES.md: Peyton approves a bounded work package once, child tasks inside it need no separate approval, and a standalone task outside an approved package still needs his approval. Choose concurrency dynamically inside the pilot ceilings. Never merge, deploy, change production, or widen an approved package without Peyton's explicit approval.",
   "reviewers": [
     {
       "harness": "codex"
