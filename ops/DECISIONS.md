@@ -77,7 +77,12 @@ Unchanged by this decision:
 - One implementation owner per task (D-004).
 - Subscription-only model use (D-005).
 - Manual merge and production approval (D-006). The completion gate can move a
-  task to Ready, never to merged.
+  task to Ready, never to merged. Ready is not merge authority: any merge action
+  needs a fresh explicit approval from Peyton naming the specific pull request
+  or bounded set of pull requests, and can never be inferred from work-package
+  approval, completion-gate success, a Codex `PASS`, green CI, or permission to
+  mark a pull request Ready. The invariant and its PR #2 pilot evidence live in
+  `docs/AO_RULES.md` under "READY != MERGE AUTHORITY".
 - Peyton's explicit approval is still required for merge to `main`, production
   deployment, production Supabase or schema changes, credentials, billing or
   purchases, destructive or irreversible changes, external or customer

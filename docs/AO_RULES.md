@@ -55,23 +55,26 @@ from:
 
 Rules:
 
+- Use the smallest team that does the job.
 - Use one worker when the work is sequential or overlapping.
 - Use multiple workers only for genuinely independent workstreams.
 - Never spawn a worker only because capacity exists. Prefer finishing existing
   work over creating unnecessary new work.
-- Read-only research or audit workers may use greater parallelism inside the
-  total ceiling, because their collision risk is lower.
+- Read-only research or audit workers may use greater parallelism than
+  code-writing workers, because their collision risk is lower. They still count
+  against the total session ceiling.
 - Above four simultaneous implementation workers, state why the extra
   concurrency materially shortens the critical path.
 - Reduce concurrency automatically on resource contention, model throttling,
   repeated merge conflicts, or rising coordination cost.
 
-Hard safety ceilings during the pilot:
+Hard safety ceilings during the pilot. These are runaway guards, not targets:
 
-- 8 active implementation workers across the portfolio
+- 8 active worker sessions total across the portfolio, including implementation,
+  research, and audit workers
 - 2 active reviewer sessions
 - 4 code-writing workers in one repository
-- 1 code-writing worker per overlapping subsystem or file area
+- 1 code-writing worker per overlapping subsystem/file area
 
 ## Project orchestrator
 
@@ -179,7 +182,32 @@ When the gate passes, the orchestrator is authorized to:
 - Place the task in Agent Orchestrator's Ready column.
 - Include the task in the next summary for Peyton.
 
-The orchestrator may not merge. Merge stays Peyton's explicit decision (D-006).
+The orchestrator may not merge. See "READY != MERGE AUTHORITY" below.
+
+## READY != MERGE AUTHORITY
+
+Ready is a review state. It is not permission to merge.
+
+- A successful completion gate authorizes Draft -> Ready only.
+- It never authorizes: merge, squash merge, rebase merge, enabling auto-merge,
+  or pushing directly to `main`.
+- Before any merge action, there must be a fresh explicit Peyton approval naming
+  the specific pull request or bounded set of pull requests to merge.
+- Merge authority must never be inferred from: approval of a work package;
+  approval to execute a task; completion-gate success; Codex `PASS`; green CI;
+  the phrase "Ready"; prior merge approvals; or permission to mark a pull
+  request Ready for Review.
+
+Merge stays Peyton's explicit decision (D-006).
+
+> Pilot evidence (PR #2, BB-001, merged 2026-09-03 as b794981): PR #2 moved
+> from Ready to merged on the strength of a brief conversational go-ahead
+> ("go ahead with the merge") given in the governing conversation before any
+> formal definition of merge authority existed. The approval did not name the
+> PR explicitly, and nothing in the rules at the time distinguished Ready from
+> merge authority or defined what a valid merge approval must contain. This
+> invariant closes that ambiguity: only a fresh explicit approval naming the
+> specific PR (or bounded set of PRs) authorizes any merge action.
 
 ## Interruption policy
 
@@ -211,7 +239,7 @@ Interrupt Peyton only when:
 
 These boundaries are unchanged by the work-package model:
 
-- Merge to `main`
+- Merge to `main` (see "READY != MERGE AUTHORITY")
 - Production deployment
 - Production Supabase or schema changes
 - Credentials
