@@ -1,6 +1,6 @@
 # Bracket Builder Current State
 
-**Last updated:** September 2, 2026
+**Last updated:** September 3, 2026
 
 ## Current phase
 
@@ -18,16 +18,36 @@ features.
 - The repository includes Next.js, Supabase, voting, bracket creation, sharing,
   and results code.
 - `scripts/verify.sh` performs a TypeScript check and production build.
-- The current `README.md` is still generic Create Next App boilerplate.
-- No fresh local verification result has been recorded for this pilot yet.
+- `README.md` now documents the product, setup, environment variable names,
+  verification, repository map, data model, and approval boundaries. It is no
+  longer Create Next App boilerplate.
+- Fresh local verification has been recorded for this pilot: `git diff --check`
+  and `bash scripts/verify.sh` both passed on BB-001.
+
+## Operating model
+
+The pilot now runs the closed-loop work-package model recorded as D-008 in
+`ops/DECISIONS.md`. Peyton approves a bounded work package once, and the
+orchestrator runs decompose, execute, verify, review, repair, and advance until
+each child task is Ready or genuinely blocked. Per-task approval and the fixed
+three-worker/one-reviewer limit no longer apply. The full rules, including the
+dynamic concurrency policy, completion gate, interruption policy, and work
+package report, live in `docs/AO_RULES.md`.
+
+Merge, production deployment, production Supabase changes, credentials, billing,
+destructive changes, external communication, and widening a package still
+require Peyton's explicit approval.
 
 ## Agent Orchestrator starter sequence
 
-### BB-001: Replace the boilerplate README
+### BB-001: Replace the boilerplate README — complete
 
 **Owner:** Claude Code  
 **Reviewer:** Codex  
 **Risk:** Low
+
+Status: merged to `main` on September 3, 2026 as `b794981` via pull request
+number 2, with `git diff --check` and `bash scripts/verify.sh` passing.
 
 Goal: Replace the generic README with accurate product, local setup,
 environment, verification, architecture, and safety instructions.
